@@ -25,8 +25,7 @@ function reducer(state, action) {
   if (action.type === "REMOVE_USER") {
     return state.filter((user) => user.id !== action.userId);
   }
-  //console.log("sss", state);
-  //console.log("aaa", action);
+
   if (action.type === "CHANGE_NAME") {
     state.map((user) => {
       if (user.id === action.userId) {
@@ -39,18 +38,42 @@ function reducer(state, action) {
   if (action.type === "CHANGE_GENDER") {
     state.map((user) => {
       if (user.id === action.userId) {
-        user.gender ===  female ? user.
+        user.gender === "female"
+          ? (user.gender = "male")
+          : (user.gender = "female");
       }
       return user;
     });
+  }
+
+  if (action.type === "INCREASE_AGE") {
+    state.map((user) => {
+      if (user.id === action.userId) {
+        user.age = user.age + action.increase;
+      }
+      return user;
+    });
+  }
+
+  if (action.type === "INCREASE_AGE_FOR_ALL") {
+    state.map((user) => {
+      user.age = user.age + action.increase;
+      return user;
+    });
+  }
+
+  if (action.type === "KILL_ALL_HUMANS") {
+    return state.filter((user) => user === null);
+  }
+
+  if (action.type === "KILL_BY_GENDER") {
+    return state.filter((user) => user.gender !== action.gender);
   }
 
   return state;
 }
 
 const store = createStore(reducer, initialState);
-
-// console.log(store.getState());
 
 store.dispatch({
   type: "ADD_USER",
@@ -95,7 +118,7 @@ store.dispatch({
 
 store.dispatch({
   type: "KILL_BY_GENDER",
-  gender: "male",
+  gender: "female",
 });
 
 // https://redux.js.org/tutorials/fundamentals/part-3-state-actions-reducers

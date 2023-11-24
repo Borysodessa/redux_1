@@ -16,10 +16,17 @@ const initialState = [
 ];
 
 function reducer(state, action) {
+  // if (action.type === "ADD_USER") {
+  //   const newState = [];
+  //   for (let obj of state) {
+  //     newState.push({ ...obj });
+  //   }
+  //   newState.push(action.user);
+  //   return newState;
+  // }не мутирующий
+
   if (action.type === "ADD_USER") {
-    const newArr = [...state];
-    newArr.push(action.user);
-    return newArr;
+    return [...state, action.user];
   }
 
   if (action.type === "REMOVE_USER") {
@@ -27,37 +34,70 @@ function reducer(state, action) {
   }
 
   if (action.type === "CHANGE_NAME") {
-    state.map((user) => {
+    const newState = [];
+    for (let i = 0; i < state.length; i += 1) {
+      // for-of → map
+      if (state[i].id === action.userId) {
+        const obj = { ...state[i] };
+        obj.name = action.userName;
+        newState.push(obj);
+      } else {
+        newState.push(state[i]);
+      }
+    }
+    return newState;
+  }
+
+  if (action.type === "CHANGE_NAME") {
+    const newState = [];
+    for (let obj of state) {
+      newState.push({ ...obj });
+    }
+    return newState.map((user) => {
       if (user.id === action.userId) {
-        user.name = "Qqqqq";
+        user.name = action.userName;
       }
       return user;
     });
   }
 
   if (action.type === "CHANGE_GENDER") {
-    state.map((user) => {
+    const newState = [];
+    for (let obj of state) {
+      newState.push({ ...obj });
+    }
+    return newState.map((user) => {
       if (user.id === action.userId) {
-        user.gender === "female"
-          ? (user.gender = "male")
-          : (user.gender = "female");
+        if (user.gender === "male") {
+          user.gender = "female";
+        } else {
+          user.gender = "male";
+        }
       }
       return user;
     });
   }
 
   if (action.type === "INCREASE_AGE") {
-    state.map((user) => {
+    const newState = [];
+    for (let obj of state) {
+      newState.push({ ...obj });
+    }
+    return newState.map((user) => {
       if (user.id === action.userId) {
-        user.age = user.age + action.increase;
+        user.age += action.increase;
       }
       return user;
     });
   }
 
   if (action.type === "INCREASE_AGE_FOR_ALL") {
-    state.map((user) => {
-      user.age = user.age + action.increase;
+    const newState = [];
+    for (let obj of state) {
+      newState.push({ ...obj });
+    }
+    return newState.map((user) => {
+      user.age += action.increase;
       return user;
     });
   }
@@ -74,7 +114,7 @@ function reducer(state, action) {
 }
 
 const store = createStore(reducer, initialState);
-
+const state1 = store.getState();
 store.dispatch({
   type: "ADD_USER",
   user: {
@@ -89,6 +129,8 @@ store.dispatch({
   type: "REMOVE_USER",
   userId: 8,
 });
+
+//console.log("state1", state1);
 
 store.dispatch({
   type: "CHANGE_NAME",
@@ -120,9 +162,11 @@ store.dispatch({
   type: "KILL_BY_GENDER",
   gender: "female",
 });
-
+console.log("state1", state1);
+const state2 = store.getState();
+console.log("state2", state2);
 // https://redux.js.org/tutorials/fundamentals/part-3-state-actions-reducers
-console.log(">>>>", store.getState());
+// console.log(">>>>", store.getState());
 
 ("CHANGE_NAME");
 ("CHANGE_GENDER");
